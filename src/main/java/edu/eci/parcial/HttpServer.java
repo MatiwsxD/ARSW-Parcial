@@ -42,6 +42,8 @@ public class HttpServer {
                     break;
                 }
             }
+
+            String json = getClimaCiudadAPI("London");
             if (file.startsWith("/clima/")){
                 outputLine = "HTTP/1.1 200 OK\r\n"
                         + "Content-Type text/html\r\n"
@@ -51,12 +53,17 @@ public class HttpServer {
                         + "<head>"
                         + "<meta charset=\"UTF-8\">"
                         + "<title>Title of the document</title>\n"
+                        + "<script src='index.js'> </script>"
                         + "</head>"
                         + "<body>"
                         + "Prueba1"
+                        + "<input type=\"text\" id = \"ingresado\"placeholder=\"Ingrece la cantidad'\">"
+                        + "<button type='button' onclick='index.connection( $('#name').val(),$('#ingresado').val())'>Calcular!</button>"
+
+                        + "<br><br>"
                         + "</body>"
                         + "</html>";
-            }else if(file.startsWith("/consulta/")){
+            }else if(file.startsWith("/consulta")){
                 outputLine = "HTTP/1.1 200 OK\r\n"
                         + "Content-Type text/html\r\n"
                         + "\r\n"
@@ -68,6 +75,7 @@ public class HttpServer {
                         + "</head>"
                         + "<body>"
                         + "prueba2"
+                        +"<p>" +json+"</p>"
                         + "</body>"
                         + "</html>";}
             else{
@@ -94,6 +102,33 @@ public class HttpServer {
             clientSocket.close();
         }
         serverSocket.close();
+    }
+    public static String getClimaCiudadAPI(String lugar)  throws IOException {
+
+        String USER_AGENT = "Mozilla/5.0";
+        String GET_URL = "http://api.openweathermap.org/data/2.5/weather?q="+lugar+"&appid=6e72a28cc3ae5b0869e48a94997f0fd3";
+        URL url = new URL(GET_URL);
+        HttpURLConnection solicitud = (HttpURLConnection) url.openConnection();
+        solicitud.setRequestMethod("GET");
+        solicitud.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = solicitud.getResponseCode();
+        System.out.println("GET Response Code :: " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    solicitud.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            System.out.println(response.toString());
+            return response.toString();
+        } else {
+            return null;
+        }
     }
 
     static int getPort() {
