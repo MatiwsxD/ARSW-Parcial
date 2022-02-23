@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Locale;
 
-public class httpServer {
+public class HttpServer {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         try {
