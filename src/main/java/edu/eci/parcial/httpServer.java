@@ -2,6 +2,8 @@ package edu.eci.parcial;
 
 import java.net.*;
 import java.io.*;
+import java.util.Locale;
+
 public class httpServer {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
@@ -26,28 +28,50 @@ public class httpServer {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
                             clientSocket.getInputStream()));
-            String inputLine, outputLine;
-
+            String inputLine, outputLine = "";
+            boolean primeraLinea = true;
+            String file = "";
             while ((inputLine = in.readLine()) != null) {
                 System.out.println("Received: " + inputLine);
+                if(primeraLinea){
+                    file = inputLine.split(" ")[1];
+                    System.out.println(file);
+                    primeraLinea = false;
+                }
                 if (!in.ready()) {
                     break;
                 }
             }
-            outputLine = "HTTP/1.1 200 OK\r\n"
-                    + "Content-Type: text/html\r\n"
-                    + "\r\n"
-                    + "<!DOCTYPE html>"
-                    + "<html>"
-                    + "<head>"
-                    + "<meta charset=\"UTF-8\">"
-                    + "<title>Title of the document</title>\n"
-                    + "</head>"
-                    + "<body>"
-                    + "Hello moto"
-                    + "</body>"
-                    + "</html>" + inputLine;
+            if (file.startsWith("/clima/")){
+                outputLine = "HTTP/1.1 200 OK\r\n"
+                        + "Content-Type text/html\r\n"
+                        + "\r\n"
+                        + "<!DOCTYPE html>"
+                        + "<html>"
+                        + "<head>"
+                        + "<meta charset=\"UTF-8\">"
+                        + "<title>Title of the document</title>\n"
+                        + "</head>"
+                        + "<body>"
+                        + "Prueba1"
+                        + "</body>"
+                        + "</html>";
+            }else if(file.startsWith("/consulta/")){
+                outputLine = "HTTP/1.1 200 OK\r\n"
+                        + "Content-Type text/html\r\n"
+                        + "\r\n"
+                        + "<!DOCTYPE html>"
+                        + "<html>"
+                        + "<head>"
+                        + "<meta charset=\"UTF-8\">"
+                        + "<title>Title of the document</title>\n"
+                        + "</head>"
+                        + "<body>"
+                        + "prueba2"
+                        + "</body>"
+                        + "</html>";}
             out.println(outputLine);
+
 
             out.close();
             in.close();

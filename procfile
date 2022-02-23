@@ -1,1 +1,1 @@
-web: java -cp target/classes:target/dependency/* edu.eci.parcial.httpServer
+web: java -cp target/classes;target/dependency/* edu.eci.parcial.httpServer
